@@ -1,5 +1,6 @@
 /* 
 focus on ui only and responsive
+api:DummyJSON Products docs:https://dummyjson.com/docs/products
 figma:https://www.figma.com/design/FefgWQMXZWs1wiMEiwvy0e/Lafyuu-E-commerce-UI-Kit-for-Figma--Community-?node-id=35-0&t=kaL8RmaSA9K0GVcB-1
 1)folder strucure MVVM feature first layer desiction
 lib/
