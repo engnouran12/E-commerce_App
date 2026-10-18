@@ -3,6 +3,7 @@ import 'package:e_commerce/core/services/service_locator.dart';
 import 'package:e_commerce/features/auth/data/repositories/auth_repository.dart';
 import 'package:e_commerce/features/products/presentation/views/products_view.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/responsive/responsive_context.dart';
@@ -47,9 +48,8 @@ class _LoginViewState extends State<LoginView> {
       );
     } on ApiException catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.message)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.message)));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -118,7 +118,7 @@ class _LoginViewState extends State<LoginView> {
                   // Email Text Field
                   AppTextField(
                     controller: _emailController,
-                    hintText: 'Your Email',
+                    hintText: 'Your Username',
                     prefixIcon: Icons.mail_outline,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
@@ -176,7 +176,9 @@ class _LoginViewState extends State<LoginView> {
                         child: Divider(color: AppColors.border, thickness: 1),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: context.spacing.sm),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.spacing.sm,
+                        ),
                         child: Text(
                           'OR',
                           style: context.textStyles.title.copyWith(

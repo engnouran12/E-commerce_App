@@ -2,6 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/products/presentation/cubit/favorites_cubit.dart';
+import '../../features/products/data/datasources/product_details_data_source.dart';
+import '../../features/products/data/datasources/products_data_source.dart';
+import '../../features/products/data/repositories/product_details_repository.dart';
+import '../../features/products/data/repositories/products_repository.dart';
+import '../../features/products/presentation/cubit/product_details_cubit.dart';
+import '../../features/products/presentation/cubit/products_cubit.dart';
 import '../../features/auth/data/datasource/loginservice.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
@@ -14,19 +21,19 @@ final getIt = GetIt.instance;
 
 /// Registers the network stack and feature services.
 ///
-/// Call once from `main()` after `WidgetsFlutterBinding.ensureInitialized()`.
+/// Call once from main() after WidgetsFlutterBinding.ensureInitialized().
 Future<void> configureDependencies() async {
   // --- Core / infrastructure ---------------------------------------------
 
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
 
-  // Persistent local token cache (survives app restarts).
+  // Persistent local token cache.
   getIt.registerLazySingleton<TokenStorage>(
     () => SharedPrefsTokenStorage(getIt<SharedPreferences>()),
   );
 
-  // Base Dio, shared so interceptors/options are configured in one place.
+  // Shared Dio instance.
   getIt.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(
@@ -43,12 +50,38 @@ Future<void> configureDependencies() async {
     ),
   );
 
-  // DioClient owns auth-header injection, token refresh and ApiException mapping.
+  // Shared network client.
   getIt.registerLazySingleton<DioClient>(
-    () => DioClient(
-      dio: getIt<Dio>(),
-      tokenStorage: getIt<TokenStorage>(),
-    ),
+    () => DioClient(dio: getIt<Dio>(), tokenStorage: getIt<TokenStorage>()),
+  );
+
+  // --- Feature: Products List --------------------------------------------
+
+  getIt.registerLazySingleton<ProductsDataSource>(
+    () => ProductsDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  getIt.registerLazySingleton<ProductsRepository>(
+    () => ProductsRepository(dataSource: getIt<ProductsDataSource>()),
+  );
+
+  getIt.registerFactory<ProductsCubit>(
+    () => ProductsCubit(repository: getIt<ProductsRepository>()),
+  );
+
+  // --- Feature: Product Details ------------------------------------------
+
+  getIt.registerLazySingleton<ProductDetailsDataSource>(
+    () => ProductDetailsDataSource(dioClient: getIt<DioClient>()),
+  );
+
+  getIt.registerLazySingleton<ProductDetailsRepository>(
+    () =>
+        ProductDetailsRepository(dataSource: getIt<ProductDetailsDataSource>()),
+  );
+
+  getIt.registerFactory<ProductDetailsCubit>(
+    () => ProductDetailsCubit(repository: getIt<ProductDetailsRepository>()),
   );
 
   // --- Feature: Auth ------------------------------------------------------
@@ -63,4 +96,8 @@ Future<void> configureDependencies() async {
       tokenStorage: getIt<TokenStorage>(),
     ),
   );
+
+  // --- Feature: Favorites -----------------------------------------------
+
+  getIt.registerLazySingleton<FavoritesCubit>(() => FavoritesCubit());
 }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import 'api_endpoints.dart';
 import 'api_exceptions.dart';
 import 'auth_interceptor.dart';
@@ -40,14 +41,16 @@ class DioClient {
   }) {
     _tokenStorage = tokenStorage ?? InMemoryTokenStorage();
 
-    _dio = dio ??
+    _dio =
+        dio ??
         Dio(
           BaseOptions(
             baseUrl: baseUrl,
             connectTimeout: connectTimeout,
             receiveTimeout: receiveTimeout,
             sendTimeout: sendTimeout,
-            headers: defaultHeaders ??
+            headers:
+                defaultHeaders ??
                 {
                   'Content-Type': 'application/json',
                   'Accept': 'application/json',
