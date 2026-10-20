@@ -8,6 +8,10 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/products/data/datasources/products_api_datasource.dart';
 import '../../features/products/data/repositories/products_repository.dart';
 import '../../features/products/data/repositories/products_repository_impl.dart';
+import '../../features/ratings/data/datasources/ratings_image_store.dart';
+import '../../features/ratings/data/datasources/ratings_local_datasource.dart';
+import '../../features/ratings/data/repositories/ratings_repository.dart';
+import '../../features/ratings/data/repositories/ratings_repository_impl.dart';
 import '../network/api_endpoints.dart';
 import '../network/dio_client.dart';
 import '../network/token_storage.dart';
@@ -78,5 +82,20 @@ Future<void> configureDependencies() async {
     () => ProductsRepositoryImpl(datasource: getIt<ProductsApiDatasource>()),
   );
 
-  
+  // --- Feature: Ratings --------------------------------------------------
+
+  getIt.registerLazySingleton<RatingsLocalDatasource>(
+    () => RatingsLocalDatasource(),
+  );
+
+  getIt.registerLazySingleton<RatingsImageStore>(
+    () => RatingsImageStore(),
+  );
+
+  getIt.registerLazySingleton<RatingsRepository>(
+    () => RatingsRepositoryImpl(
+      datasource: getIt<RatingsLocalDatasource>(),
+      imageStore: getIt<RatingsImageStore>(),
+    ),
+  );
 }

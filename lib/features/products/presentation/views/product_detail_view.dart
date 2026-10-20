@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/responsive/responsive_context.dart';
+import '../../../../core/services/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../ratings/data/repositories/ratings_repository.dart';
+import '../../../ratings/presentation/view_models/ratings_cubit.dart';
+import '../../../ratings/presentation/views/ratings_view.dart';
 import '../view_models/product_detail_cubit.dart';
 import '../view_models/product_detail_state.dart';
 import '../widgets/add_to_cart_bar.dart';
@@ -86,6 +90,22 @@ class _ProductDetailBody extends StatelessWidget {
                   SizedBox(height: context.spacing.md),
                   if (product.reviews.isNotEmpty)
                     ProductReviewTile(review: product.reviews.first),
+                  SizedBox(height: context.spacing.md),
+                  OutlinedButton.icon(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider(
+                          create: (_) => RatingsCubit(
+                            repository: getIt<RatingsRepository>(),
+                            productId: productId,
+                          )..loadRatings(),
+                          child: RatingsView(productId: productId),
+                        ),
+                      ),
+                    ),
+                    icon: const Icon(Icons.rate_review_outlined),
+                    label: const Text('Ratings & Reviews'),
+                  ),
                 ],
               ),
             ),
