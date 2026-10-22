@@ -36,6 +36,7 @@ class ProductDetailView extends StatelessWidget {
     );
   }
 }
+
 //
 class _ProductDetailBody extends StatelessWidget {
   final int productId;

@@ -36,8 +36,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
           child: PageView.builder(
             itemCount: widget.images.length,
             onPageChanged: (i) => setState(() => _currentIndex = i),
-            itemBuilder: (context, i) => 
-            Image.network(
+            itemBuilder: (context, i) => Image.network(
               widget.images[i],
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) => const Center(
@@ -52,25 +51,22 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
           height: 40,
           child: ListView.builder(
             itemCount: widget.images.length,
-          
+
             scrollDirection: Axis.horizontal,
-            itemBuilder: (context, lenght) =>
-           
-              Container(
-                margin: EdgeInsets.all(context.spacing.xs / 2),
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: lenght == _currentIndex
-                      ? AppColors.primary
-                      : AppColors.border,
-                ),
+            itemBuilder: (context, lenght) => Container(
+              margin: EdgeInsets.all(context.spacing.xs / 2),
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: lenght == _currentIndex
+                    ? AppColors.primary
+                    : AppColors.border,
               ),
-          
+            ),
           ),
         ),
-        
+
         // Row(
         //   mainAxisAlignment: MainAxisAlignment.center,
         //   children:

@@ -9,9 +9,7 @@ import 'products_state.dart';
 class ProductsCubit extends Cubit<ProductsState> {
   ProductsCubit() : super(const ProductsInitial());
 
-get _repository => getIt<ProductsRepository>();
-    
-      
+  get _repository => getIt<ProductsRepository>();
 
   /// Loads the first page of products.
   Future<void> loadProducts({int limit = 30, int skip = 0}) async {

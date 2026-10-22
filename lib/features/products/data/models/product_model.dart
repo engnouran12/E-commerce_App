@@ -53,8 +53,7 @@ class ProductModel {
       description: json['description']?.toString() ?? '',
       category: json['category']?.toString() ?? '',
       price: (json['price'] as num?)?.toDouble() ?? 0,
-      discountPercentage:
-          (json['discountPercentage'] as num?)?.toDouble() ?? 0,
+      discountPercentage: (json['discountPercentage'] as num?)?.toDouble() ?? 0,
       rating: (json['rating'] as num?)?.toDouble() ?? 0,
       stock: (json['stock'] as num?)?.toInt() ?? 0,
       brand: json['brand']?.toString(),
@@ -69,7 +68,8 @@ class ProductModel {
       thumbnail: json['thumbnail']?.toString(),
       images: _stringList(json['images']),
       tags: _stringList(json['tags']),
-      reviews: (json['reviews'] as List?)
+      reviews:
+          (json['reviews'] as List?)
               ?.whereType<Map>()
               .map((e) => ProductReview.fromJson(Map<String, dynamic>.from(e)))
               .toList() ??
@@ -83,8 +83,7 @@ class ProductModel {
   }
 
   /// Price after applying [discountPercentage].
-  double get discountedPrice =>
-      price - (price * discountPercentage / 100);
+  double get discountedPrice => price - (price * discountPercentage / 100);
 
   /// Whether the product currently has stock available.
   bool get inStock => stock > 0;
@@ -93,28 +92,28 @@ class ProductModel {
   bool get hasDiscount => discountPercentage > 0;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'category': category,
-        'price': price,
-        'discountPercentage': discountPercentage,
-        'rating': rating,
-        'stock': stock,
-        'brand': brand,
-        'sku': sku,
-        'weight': weight,
-        'warrantyInformation': warrantyInformation,
-        'shippingInformation': shippingInformation,
-        'availabilityStatus': availabilityStatus,
-        'returnPolicy': returnPolicy,
-        'minimumOrderQuantity': minimumOrderQuantity,
-        'thumbnail': thumbnail,
-        'images': images,
-        'tags': tags,
-        'reviews': reviews.map((e) => e.toJson()).toList(),
-        'dimensions': dimensions?.toJson(),
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'category': category,
+    'price': price,
+    'discountPercentage': discountPercentage,
+    'rating': rating,
+    'stock': stock,
+    'brand': brand,
+    'sku': sku,
+    'weight': weight,
+    'warrantyInformation': warrantyInformation,
+    'shippingInformation': shippingInformation,
+    'availabilityStatus': availabilityStatus,
+    'returnPolicy': returnPolicy,
+    'minimumOrderQuantity': minimumOrderQuantity,
+    'thumbnail': thumbnail,
+    'images': images,
+    'tags': tags,
+    'reviews': reviews.map((e) => e.toJson()).toList(),
+    'dimensions': dimensions?.toJson(),
+  };
 
   static List<String> _stringList(dynamic value) {
     if (value is List) {
@@ -151,12 +150,12 @@ class ProductReview {
   }
 
   Map<String, dynamic> toJson() => {
-        'rating': rating,
-        'comment': comment,
-        'date': date?.toIso8601String(),
-        'reviewerName': reviewerName,
-        'reviewerEmail': reviewerEmail,
-      };
+    'rating': rating,
+    'comment': comment,
+    'date': date?.toIso8601String(),
+    'reviewerName': reviewerName,
+    'reviewerEmail': reviewerEmail,
+  };
 }
 
 /// Physical dimensions of a [ProductModel].
@@ -180,8 +179,8 @@ class ProductDimensions {
   }
 
   Map<String, dynamic> toJson() => {
-        'width': width,
-        'height': height,
-        'depth': depth,
-      };
+    'width': width,
+    'height': height,
+    'depth': depth,
+  };
 }

@@ -6,8 +6,11 @@ import '../../features/auth/data/datasource/loginservice.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/products/data/datasources/products_api_datasource.dart';
+import '../../features/products/data/datasources/search_history_local_datasource.dart';
 import '../../features/products/data/repositories/products_repository.dart';
 import '../../features/products/data/repositories/products_repository_impl.dart';
+import '../../features/products/data/repositories/search_history_repository.dart';
+import '../../features/products/data/repositories/search_history_repository_impl.dart';
 import '../../features/ratings/data/datasources/ratings_image_store.dart';
 import '../../features/ratings/data/datasources/ratings_local_datasource.dart';
 import '../../features/ratings/data/repositories/ratings_repository.dart';
@@ -53,17 +56,12 @@ Future<void> configureDependencies() async {
 
   // DioClient owns auth-header injection, token refresh and ApiException mapping.
   getIt.registerLazySingleton<DioClient>(
-    () => DioClient(
-      dio: getIt<Dio>(),
-      tokenStorage: getIt<TokenStorage>(),
-    ),
+    () => DioClient(dio: getIt<Dio>(), tokenStorage: getIt<TokenStorage>()),
   );
 
   // --- Feature: Auth ------------------------------------------------------
 
-  getIt.registerLazySingleton<LoginService>(
-    () => LoginService(),
-  );
+  getIt.registerLazySingleton<LoginService>(() => LoginService());
 
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -82,15 +80,23 @@ Future<void> configureDependencies() async {
     () => ProductsRepositoryImpl(datasource: getIt<ProductsApiDatasource>()),
   );
 
+  getIt.registerLazySingleton<SearchHistoryLocalDatasource>(
+    () => SearchHistoryLocalDatasource(),
+  );
+
+  getIt.registerLazySingleton<SearchHistoryRepository>(
+    () => SearchHistoryRepositoryImpl(
+      datasource: getIt<SearchHistoryLocalDatasource>(),
+    ),
+  );
+
   // --- Feature: Ratings --------------------------------------------------
 
   getIt.registerLazySingleton<RatingsLocalDatasource>(
     () => RatingsLocalDatasource(),
   );
 
-  getIt.registerLazySingleton<RatingsImageStore>(
-    () => RatingsImageStore(),
-  );
+  getIt.registerLazySingleton<RatingsImageStore>(() => RatingsImageStore());
 
   getIt.registerLazySingleton<RatingsRepository>(
     () => RatingsRepositoryImpl(

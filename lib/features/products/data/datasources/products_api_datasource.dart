@@ -13,11 +13,9 @@ import '../models/product_model.dart';
 class ProductsApiDatasource {
   //use dio from service locator instead of passing it in constructor, to avoid having to pass it through multiple layers of repositories and cubits. This is a common pattern in Flutter apps using service locators like GetIt.
 
-
-  
   get _dioClient => getIt<DioClient>();
 
-  ProductsApiDatasource() ;
+  ProductsApiDatasource();
 
   /// Fetches a page of products from `GET /products`.
   ///
@@ -28,11 +26,7 @@ class ProductsApiDatasource {
   }) async {
     final response = await _dioClient.get(
       ApiEndpoints.products,
-      queryParameters: {
-        
-        'limit': limit,
-        'skip': skip,
-      },
+      queryParameters: {'limit': limit, 'skip': skip},
     );
 
     final data = response.data;
@@ -68,4 +62,39 @@ class ProductsApiDatasource {
 
     return ProductModel.fromJson(map);
   }
+
+  /// Searches products by name from `GET /products/search?q={query}`.
+  ///
+  /// Throws [ApiException] on any failure.
+  /// TODO: change model to result and api
+  Future<List<ProductModel>> searchProducts({
+    required String query,
+    int limit = 30,
+    int skip = 0,
+  }) async {
+    final response = await _dioClient.get(
+      ApiEndpoints.searchProducts,
+      queryParameters: {'q': query, 'limit': limit, 'skip': skip},
+    );
+
+    return _parseProducts(response.data);
+  }
+
+  List<ProductModel> _parseProducts(dynamic data) {
+    final map = data is Map<String, dynamic>
+        ? data
+        : (data is Map ? Map<String, dynamic>.from(data) : null);
+
+    final rawProducts = map?['products'];
+    if (rawProducts is! List) {
+      throw const ApiException(message: 'Unexpected response format.');
+    }
+
+    return rawProducts
+        .whereType<Map>()
+        .map((e) => ProductModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
 }
+//git..locale filter,cashimg
+//,api search

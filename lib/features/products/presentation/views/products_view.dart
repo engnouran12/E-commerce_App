@@ -10,6 +10,7 @@ import '../view_models/products_state.dart';
 import '../widgets/products_grid.dart';
 import '../widgets/products_status.dart';
 import '../widgets/category_item.dart';
+import 'product_search_view.dart';
 
 class ProductsView extends StatelessWidget {
   const ProductsView({super.key});
@@ -45,21 +46,31 @@ class _ProductsScreen extends StatelessWidget {
                       padding: EdgeInsets.all(context.spacing.md),
                       child: Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: AppTextField(
                               hintText: 'Search Product',
                               prefixIcon: Icons.search,
+                              readOnly: true,
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const ProductSearchView(),
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(width: context.spacing.md),
                           IconButton(
-                            icon: const Icon(Icons.favorite_border,
-                                color: AppColors.textSecondary),
+                            icon: const Icon(
+                              Icons.favorite_border,
+                              color: AppColors.textSecondary,
+                            ),
                             onPressed: () {},
                           ),
                           IconButton(
-                            icon: const Icon(Icons.notifications_none,
-                                color: AppColors.textSecondary),
+                            icon: const Icon(
+                              Icons.notifications_none,
+                              color: AppColors.textSecondary,
+                            ),
                             onPressed: () {},
                           ),
                         ],
@@ -69,7 +80,10 @@ class _ProductsScreen extends StatelessWidget {
                     // Categories Section
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: context.responsive(mobile: 16.0, tablet: 40.0),
+                        horizontal: context.responsive(
+                          mobile: 16.0,
+                          tablet: 40.0,
+                        ),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,8 +92,9 @@ class _ProductsScreen extends StatelessWidget {
                           Flexible(
                             child: Text(
                               'More Category',
-                              style: context.textStyles.heading4
-                                  .copyWith(color: AppColors.primary),
+                              style: context.textStyles.heading4.copyWith(
+                                color: AppColors.primary,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -91,21 +106,33 @@ class _ProductsScreen extends StatelessWidget {
 
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.symmetric(horizontal: context.spacing.md),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.spacing.md,
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const CategoryItem(icon: Icons.checkroom, title: 'Shirt'),
-                          SizedBox(width: context.spacing.md),
-                          const CategoryItem(icon: Icons.work_outline, title: 'Bag'),
+                          const CategoryItem(
+                            icon: Icons.checkroom,
+                            title: 'Shirt',
+                          ),
                           SizedBox(width: context.spacing.md),
                           const CategoryItem(
-                              icon: Icons.computer, title: 'Equipment'),
+                            icon: Icons.work_outline,
+                            title: 'Bag',
+                          ),
+                          SizedBox(width: context.spacing.md),
+                          const CategoryItem(
+                            icon: Icons.computer,
+                            title: 'Equipment',
+                          ),
                           SizedBox(width: context.spacing.md),
                           const CategoryItem(icon: Icons.watch, title: 'Watch'),
                           SizedBox(width: context.spacing.md),
                           const CategoryItem(
-                              icon: Icons.diamond, title: 'Jewelry'),
+                            icon: Icons.diamond,
+                            title: 'Jewelry',
+                          ),
                         ],
                       ),
                     ),
@@ -119,12 +146,16 @@ class _ProductsScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Flash Sale', style: context.textStyles.heading4),
+                          Text(
+                            'Flash Sale',
+                            style: context.textStyles.heading4,
+                          ),
                           Flexible(
                             child: Text(
                               'See More',
-                              style: context.textStyles.heading4
-                                  .copyWith(color: AppColors.primary),
+                              style: context.textStyles.heading4.copyWith(
+                                color: AppColors.primary,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -140,23 +171,22 @@ class _ProductsScreen extends StatelessWidget {
               BlocBuilder<ProductsCubit, ProductsState>(
                 builder: (context, state) {
                   return switch (state) {
-                    ProductsSuccess(:final products) =>
-                      ProductsGrid(products: products),
+                    ProductsSuccess(:final products) => ProductsGrid(
+                      products: products,
+                    ),
                     ProductsEmpty() => const ProductsEmptySliver(),
                     ProductsError(:final message) => ProductsErrorSliver(
-                        message: message,
-                        onRetry: () =>
-                            context.read<ProductsCubit>().loadProducts(),
-                      ),
-                    ProductsLoading() || ProductsInitial() =>
-                      const ProductsLoadingSliver(),
+                      message: message,
+                      onRetry: () =>
+                          context.read<ProductsCubit>().loadProducts(),
+                    ),
+                    ProductsLoading() ||
+                    ProductsInitial() => const ProductsLoadingSliver(),
                   };
                 },
               ),
 
-              SliverToBoxAdapter(
-                child: SizedBox(height: context.spacing.xxl),
-              ),
+              SliverToBoxAdapter(child: SizedBox(height: context.spacing.xxl)),
             ],
           ),
         ),

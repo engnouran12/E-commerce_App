@@ -8,4 +8,11 @@ abstract class ProductsRepository {
 
   /// Returns a single product by its id.
   Future<ProductModel> getProductById(int id);
+
+  /// Returns products whose title matches [query].
+  Future<List<ProductModel>> searchProducts({
+    required String query,
+    int limit,
+    int skip,
+  });
 }
