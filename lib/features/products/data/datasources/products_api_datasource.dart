@@ -13,9 +13,11 @@ import '../models/product_model.dart';
 class ProductsApiDatasource {
   //use dio from service locator instead of passing it in constructor, to avoid having to pass it through multiple layers of repositories and cubits. This is a common pattern in Flutter apps using service locators like GetIt.
 
+
+  
   get _dioClient => getIt<DioClient>();
 
-  ProductsApiDatasource();
+  ProductsApiDatasource() ;
 
   /// Fetches a page of products from `GET /products`.
   ///
@@ -26,7 +28,11 @@ class ProductsApiDatasource {
   }) async {
     final response = await _dioClient.get(
       ApiEndpoints.products,
-      queryParameters: {'limit': limit, 'skip': skip},
+      queryParameters: {
+        
+        'limit': limit,
+        'skip': skip,
+      },
     );
 
     final data = response.data;
@@ -62,11 +68,10 @@ class ProductsApiDatasource {
 
     return ProductModel.fromJson(map);
   }
-
   /// Searches products by name from `GET /products/search?q={query}`.
   ///
   /// Throws [ApiException] on any failure.
-  /// TODO: change model to result and api
+  /// TODO: change model to result and apilink
   Future<List<ProductModel>> searchProducts({
     required String query,
     int limit = 30,
@@ -74,7 +79,11 @@ class ProductsApiDatasource {
   }) async {
     final response = await _dioClient.get(
       ApiEndpoints.searchProducts,
-      queryParameters: {'q': query, 'limit': limit, 'skip': skip},
+      queryParameters: {
+        'q': query,
+        'limit': limit,
+        'skip': skip,
+      },
     );
 
     return _parseProducts(response.data);
@@ -96,5 +105,9 @@ class ProductsApiDatasource {
         .toList();
   }
 }
-//git..locale filter,cashimg
-//,api search
+
+//steps
+// get result from api 
+//save to local db using sql
+//ui disply history list
+//sync with api 
