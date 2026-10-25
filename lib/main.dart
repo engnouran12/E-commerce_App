@@ -30,8 +30,9 @@ class MyApp extends StatelessWidget {
       title: 'E-Commerce',
       theme: AppTheme.light,
       //refactor 
-      home: ProductSearchView(),
-      //isLoggedIn ? const ProductsView() : const LoginView(),
+      home:
+      // ProductSearchView(),
+      isLoggedIn ? const ProductsView() : const LoginView(),
       debugShowCheckedModeBanner: false,
     );
   }

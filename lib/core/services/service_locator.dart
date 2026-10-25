@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/auth/data/datasource/loginservice.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
+import '../../features/category_feature/data/datasources/category_api_datasource.dart';
+import '../../features/category_feature/data/repositories/category_repository.dart';
+import '../../features/category_feature/data/repositories/category_repository_impl.dart';
 import '../../features/products/data/datasources/products_api_datasource.dart';
 import '../../features/products/data/datasources/search_history_local_datasource.dart';
 import '../../features/products/data/repositories/products_repository.dart';
@@ -88,6 +91,16 @@ Future<void> configureDependencies() async {
     () => SearchHistoryRepositoryImpl(
       datasource: getIt<SearchHistoryLocalDatasource>(),
     ),
+  );
+
+  // --- Feature: Categories ------------------------------------------------
+
+  getIt.registerLazySingleton<CategoryApiDatasource>(
+    () => CategoryApiDatasource(),
+  );
+
+  getIt.registerLazySingleton<CategoryRepository>(
+    () => CategoryRepositoryImpl(getIt<CategoryApiDatasource>()),
   );
 
   // --- Feature: Ratings --------------------------------------------------

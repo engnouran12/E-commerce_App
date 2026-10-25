@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/responsive/responsive_context.dart';
+import '../../../category_feature/presentation/view/categort_view.dart';
 import '../view_models/products_cubit.dart';
 import '../view_models/products_state.dart';
 import '../widgets/products_grid.dart';
@@ -90,13 +91,20 @@ class _ProductsScreen extends StatelessWidget {
                         children: [
                           Text('Category', style: context.textStyles.heading4),
                           Flexible(
-                            child: Text(
-                              'More Category',
-                              style: context.textStyles.heading4.copyWith(
-                                color: AppColors.primary,
+                            child: InkWell(
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const CategoryView(),
+                                ),
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              child: Text(
+                                'More Category',
+                                style: context.textStyles.heading4.copyWith(
+                                  color: AppColors.primary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                         ],

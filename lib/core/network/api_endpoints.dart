@@ -12,7 +12,7 @@ class ApiEndpoints {
   // Products Endpoints
   static const String products = 'products';
   static const String searchProducts = 'products/search';
-  static const String categories = 'products/categories';
+  static const String categories = 'products/category-list';
   static String productById(int id) => 'products/$id';
 
   // Users & Carts
