@@ -1,6 +1,7 @@
 import 'package:e_commerce/core/services/service_locator.dart';
 import 'package:e_commerce/features/auth/data/repositories/auth_repository.dart';
 import 'package:e_commerce/features/auth/presentation/views/login_view.dart';
+import 'package:e_commerce/features/cart/presentation/views/cart_view.dart' show CartView;
 import 'package:e_commerce/features/products/presentation/views/offer_view.dart';
 import 'package:e_commerce/features/products/presentation/views/product_search_view.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +31,9 @@ class MyApp extends StatelessWidget {
       title: 'E-Commerce',
       theme: AppTheme.light,
       //refactor 
-      home:
+      home:CartView(),
       // ProductSearchView(),
-      isLoggedIn ? const ProductsView() : const LoginView(),
+    //  isLoggedIn ? const ProductsView() : const LoginView(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/auth/data/datasource/loginservice.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
+import '../../features/cart/data/datasources/cart_api_datasource.dart';
+import '../../features/cart/data/repositories/cart_repository.dart';
+import '../../features/cart/data/repositories/cart_repository_impl.dart';
 import '../../features/category_feature/data/datasources/category_api_datasource.dart';
 import '../../features/category_feature/data/repositories/category_repository.dart';
 import '../../features/category_feature/data/repositories/category_repository_impl.dart';
@@ -116,5 +119,15 @@ Future<void> configureDependencies() async {
       datasource: getIt<RatingsLocalDatasource>(),
       imageStore: getIt<RatingsImageStore>(),
     ),
+  );
+
+  // --- Feature: Cart ------------------------------------------------------
+
+  getIt.registerLazySingleton<CartApiDatasource>(
+    () => CartApiDatasource(),
+  );
+
+  getIt.registerLazySingleton<CartRepository>(
+    () => CartRepositoryImpl(datasource: getIt<CartApiDatasource>()),
   );
 }
