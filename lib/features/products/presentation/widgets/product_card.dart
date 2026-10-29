@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/responsive/responsive_context.dart';
 import '../../data/models/product_model.dart';
-import '../views/product_detail_view.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -12,11 +10,7 @@ class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.product});
 
   void _openDetail(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ProductDetailView(productId: product.id),
-      ),
-    );
+    Navigator.of(context).pushNamed('/product-details', arguments: product.id);
   }
 
   @override

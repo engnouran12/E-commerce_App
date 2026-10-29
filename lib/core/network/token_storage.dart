@@ -31,10 +31,9 @@ class InMemoryTokenStorage implements TokenStorage {
   String? _accessToken;
   String? _refreshToken;
 
-  InMemoryTokenStorage({
-    this._accessToken,
-    this._refreshToken,
-  });
+  InMemoryTokenStorage({String? accessToken, String? refreshToken})
+    : _accessToken = accessToken,
+      _refreshToken = refreshToken;
 
   @override
   Future<String?> getAccessToken() async => _accessToken;

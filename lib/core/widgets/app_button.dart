@@ -5,7 +5,7 @@ import '../theme/app_spacing.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isOutline;
   final bool isLoading;
 

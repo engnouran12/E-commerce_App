@@ -1,11 +1,12 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-
 import '../../../../core/responsive/responsive_context.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/product_model.dart';
 import 'product_rating.dart';
 
-/// A single customer review: avatar, name, stars, comment.
+/// A single customer review: avatar, name, stars, comment and images.
 class ProductReviewTile extends StatelessWidget {
   final ProductReview review;
 
@@ -32,6 +33,36 @@ class ProductReviewTile extends StatelessWidget {
               ProductRating(rating: review.rating.toDouble(), size: 14),
               SizedBox(height: context.spacing.xs),
               Text(review.comment, style: context.textStyles.body),
+              if (review.images.isNotEmpty) ...[
+                SizedBox(height: context.spacing.sm),
+                SizedBox(
+                  height: 76,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: review.images.length,
+                    separatorBuilder: (_, __) =>
+                        SizedBox(width: context.spacing.sm),
+                    itemBuilder: (context, index) {
+                      try {
+                        final bytes = base64Decode(review.images[index]);
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.memory(
+                            bytes,
+                            width: 76,
+                            height: 76,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                const SizedBox.shrink(),
+                          ),
+                        );
+                      } on FormatException {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ],
           ),
         ),

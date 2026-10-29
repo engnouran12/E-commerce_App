@@ -49,17 +49,12 @@ Future<void> configureDependencies() async {
 
   // DioClient owns auth-header injection, token refresh and ApiException mapping.
   getIt.registerLazySingleton<DioClient>(
-    () => DioClient(
-      dio: getIt<Dio>(),
-      tokenStorage: getIt<TokenStorage>(),
-    ),
+    () => DioClient(dio: getIt<Dio>(), tokenStorage: getIt<TokenStorage>()),
   );
 
   // --- Feature: Auth ------------------------------------------------------
 
-  getIt.registerLazySingleton<LoginService>(
-    () => LoginService(),
-  );
+  getIt.registerLazySingleton<LoginService>(() => LoginService());
 
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -75,8 +70,9 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerLazySingleton<ProductsRepository>(
-    () => ProductsRepositoryImpl(datasource: getIt<ProductsApiDatasource>()),
+        () => ProductsRepositoryImpl(
+      datasource: getIt<ProductsApiDatasource>(),
+      preferences: getIt<SharedPreferences>(),
+    ),
   );
-
-  
 }

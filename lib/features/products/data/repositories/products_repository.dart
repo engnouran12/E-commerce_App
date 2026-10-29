@@ -1,11 +1,18 @@
+
 import '../models/product_model.dart';
 
-/// Clean contract for products data. The presentation layer depends on this
-/// abstraction only, so the datasource/API coupling stays in the data layer.
 abstract class ProductsRepository {
-  /// Returns a page of products.
-  Future<List<ProductModel>> getProducts({int limit, int skip});
+  Future<List<ProductModel>> getProducts({
+    int limit = 30,
+    int skip = 0,
+  });
 
-  /// Returns a single product by its id.
   Future<ProductModel> getProductById(int id);
+
+  Future<List<ProductReview>> getLocalReviews(int productId);
+
+  Future<void> addLocalReview(
+      int productId,
+      ProductReview review,
+      );
 }
