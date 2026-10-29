@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/responsive/responsive_context.dart';
 
@@ -6,11 +7,7 @@ class CategoryItem extends StatelessWidget {
   final IconData icon;
   final String title;
 
-  const CategoryItem({
-    super.key,
-    required this.icon,
-    required this.title,
-  });
+  const CategoryItem({super.key, required this.icon, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +25,9 @@ class CategoryItem extends StatelessWidget {
         SizedBox(height: context.spacing.sm),
         Text(
           title,
-          style: context.textStyles.caption.copyWith(color: AppColors.textSecondary),
+          style: context.textStyles.caption.copyWith(
+            color: AppColors.textSecondary,
+          ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
