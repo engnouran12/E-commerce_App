@@ -5,6 +5,7 @@ class UserModel {
   final String email;
   final String? firstName;
   final String? lastName;
+  final String? phone;
   final String? image;
 
   const UserModel({
@@ -13,6 +14,7 @@ class UserModel {
     required this.email,
     this.firstName,
     this.lastName,
+    this.phone,
     this.image,
   });
 
@@ -23,6 +25,7 @@ class UserModel {
       email: json['email']?.toString() ?? '',
       firstName: json['firstName']?.toString(),
       lastName: json['lastName']?.toString(),
+      phone: json['phone']?.toString(),
       image: json['image']?.toString(),
     );
   }
@@ -38,6 +41,7 @@ class UserModel {
         'email': email,
         'firstName': firstName,
         'lastName': lastName,
+        'phone': phone,
         'image': image,
       };
 }

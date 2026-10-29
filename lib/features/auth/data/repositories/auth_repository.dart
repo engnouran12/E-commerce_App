@@ -10,6 +10,9 @@ abstract class AuthRepository {
     required String password,
   });
 
+  /// Fetches the profile of the currently authenticated user from the API.
+  Future<UserModel> fetchCurrentUser();
+
   /// Restores a session from the locally cached token.
   ///
   /// Returns the authenticated [UserModel] when a valid cached session exists,

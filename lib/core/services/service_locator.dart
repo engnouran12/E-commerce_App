@@ -17,6 +17,7 @@ import '../../features/products/data/repositories/products_repository.dart';
 import '../../features/products/data/repositories/products_repository_impl.dart';
 import '../../features/products/data/repositories/search_history_repository.dart';
 import '../../features/products/data/repositories/search_history_repository_impl.dart';
+import '../../features/profile/presentation/view_models/profile_cubit.dart';
 import '../../features/ratings/data/datasources/ratings_image_store.dart';
 import '../../features/ratings/data/datasources/ratings_local_datasource.dart';
 import '../../features/ratings/data/repositories/ratings_repository.dart';
@@ -75,6 +76,10 @@ Future<void> configureDependencies() async {
       tokenStorage: getIt<TokenStorage>(),
     ),
   );
+
+  // --- Feature: Profile ---------------------------------------------------
+
+  getIt.registerFactory<ProfileCubit>(() => ProfileCubit());
 
   // --- Feature: Products --------------------------------------------------
 

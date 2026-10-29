@@ -37,6 +37,7 @@ get _dioClient => getIt<DioClient>();
   /// Fetches the profile of the currently authenticated user.
   Future<UserModel> fetchCurrentUser() async {
     final response = await _dioClient.get(ApiEndpoints.me);
+    print('Current user data:::::;;;:: ${response.data}'); // Debug print
     return UserModel.fromJson(_asJsonMap(response.data));
   }
 

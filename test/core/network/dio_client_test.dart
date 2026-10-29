@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:e_commerce/core/network/api_endpoints.dart';
 import 'package:e_commerce/core/network/api_exceptions.dart';
@@ -65,6 +67,61 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       expect(handler.nextOptions?.headers['Authorization'], isNull);
+    });
+
+    test('Clears expired local access token but keeps refresh token', () async {
+      final storage = InMemoryTokenStorage(
+        accessToken: _jwtWithExpiry(
+          DateTime.now().subtract(const Duration(minutes: 1)),
+        ),
+        refreshToken: 'valid_refresh',
+      );
+      final interceptor = AuthInterceptor(tokenStorage: storage);
+
+      final options = RequestOptions(path: '/users');
+      final handler = _TestRequestHandler();
+
+      interceptor.onRequest(options, handler);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(handler.nextOptions?.headers['Authorization'], isNull);
+      expect(await storage.getAccessToken(), isNull);
+      expect(await storage.getRefreshToken(), 'valid_refresh');
+    });
+
+    test('Clears tokens without refreshing when refresh token expired',
+        () async {
+      final storage = InMemoryTokenStorage(
+        accessToken: 'old_access',
+        refreshToken: _jwtWithExpiry(
+          DateTime.now().subtract(const Duration(minutes: 1)),
+        ),
+      );
+
+      bool unauthorizedTriggered = false;
+      final interceptor = AuthInterceptor(
+        tokenStorage: storage,
+        onUnauthorized: () => unauthorizedTriggered = true,
+      );
+
+      final err = DioException(
+        requestOptions: RequestOptions(path: '/protected'),
+        response: Response(
+          requestOptions: RequestOptions(path: '/protected'),
+          statusCode: 401,
+        ),
+        type: DioExceptionType.badResponse,
+      );
+
+      final handler = _TestErrorHandler();
+      interceptor.onError(err, handler);
+
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      expect(unauthorizedTriggered, isTrue);
+      expect(await storage.getAccessToken(), isNull);
+      expect(await storage.getRefreshToken(), isNull);
+      expect(handler.nextError, isNotNull);
     });
 
     test('Refreshes token on 401 error and retries original request', () async {
@@ -241,6 +298,14 @@ void main() {
       expect(apiException.message, 'Requested resource was not found.');
     });
   });
+}
+
+String _jwtWithExpiry(DateTime expiry) {
+  String encode(Map<String, dynamic> value) =>
+      base64Url.encode(utf8.encode(jsonEncode(value))).replaceAll('=', '');
+  final header = encode({'alg': 'none', 'typ': 'JWT'});
+  final payload = encode({'exp': expiry.millisecondsSinceEpoch ~/ 1000});
+  return '$header.$payload.signature';
 }
 
 class _TestRequestHandler extends RequestInterceptorHandler {

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 ////
 
 class AppNetworkImage extends StatelessWidget {
+  static const _tag = '[AppNetworkImage]';
+
   const AppNetworkImage({
     super.key,
     required this.url,
@@ -23,18 +25,38 @@ class AppNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final link = url?.trim();
-    if (link == null || link.isEmpty) return _box(const Icon(Icons.image_not_supported));
+    if (link == null || link.isEmpty) {
+      debugPrint('$_tag skipped: no url');
+      return _box(const Icon(Icons.image_not_supported));
+    }
+
+    // New url OR new version = new cache entry (old one expires automatically).
+    final cacheKey = version == null ? link : '$link?v=$version';
+    debugPrint('$_tag build -> url=$link, cacheKey=$cacheKey');
 
     return CachedNetworkImage(
-
       imageUrl: link,
-      // New url OR new version = new cache entry (old one expires automatically).
-      cacheKey: version == null ? link : '$link?v=$version',
+      cacheKey: cacheKey,
       width: width,
       height: height,
       fit: fit,
-      placeholder: (_, __) => _box(const CircularProgressIndicator(strokeWidth: 2)),
-      errorWidget: (_, __, ___) => _box(const Icon(Icons.broken_image)),
+      placeholder: (_, _) {
+        debugPrint('$_tag cache miss/loading -> $cacheKey');
+        return _box(const CircularProgressIndicator(strokeWidth: 2));
+      },
+      imageBuilder: (_, imageProvider) {
+        debugPrint('$_tag cache hit/loaded -> $cacheKey');
+        return Image(
+          image: imageProvider,
+          width: width,
+          height: height,
+          fit: fit,
+        );
+      },
+      errorWidget: (_, _, error) {
+        debugPrint('$_tag load failed -> $cacheKey ($error)');
+        return _box(const Icon(Icons.broken_image));
+      },
     );
   }
 

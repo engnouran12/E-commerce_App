@@ -36,6 +36,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final refreshToken =
         _readToken(data, 'refreshToken', 'refresh_token') ?? accessToken;
 
+    //login first
     if (accessToken == null || accessToken.isEmpty) {
       throw const ApiException(
         message: 'Login succeeded but no access token was returned.',
@@ -50,6 +51,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
     return UserModel.fromJson(data);
   }
+
+  @override
+  Future<UserModel> fetchCurrentUser() => _loginService.fetchCurrentUser();
 
   @override
   Future<UserModel?> restoreSession() async {
